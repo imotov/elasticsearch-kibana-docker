@@ -28,3 +28,9 @@ When done, stop Elasticsearch and Kibana by running:
 ```
 $ docker-compose down
 ```
+
+To update the rebuild the image after upgate run:
+
+```
+$ docker-compose build
+```
