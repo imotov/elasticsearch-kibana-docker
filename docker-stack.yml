@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-platinum:6.2.3
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - "127.0.0.1:9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xmx1G -Xms1G"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.3
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yaml:ro
+    ports:
+      - "5601:5601"
+    networks:
+      - elastic
+    depends_on:
+      - elasticsearch
+    environment:
+      - SERVER_NAME=kibana
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - SERVER_HOST=0.0.0.0
+      - LOGGING_QUIET=true
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+
+networks:
+  elastic:
