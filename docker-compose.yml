@@ -22,7 +22,7 @@ services:
     volumes:
       - ./kibana/config/:/usr/share/kibana/config:ro
     ports:
-      - "127.0.0.1:5601:5601"
+      - "5601:5601"
     networks:
       - elastic
     depends_on:
