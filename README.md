@@ -36,7 +36,7 @@ $ sudo docker stack ps elastic-stack
 Find the service ids by running
 
 ```
-$ sudo docker stack rm elastic-stack
+$ sudo docker stack ps elastic-stack
 ```
 
 Check logs by running
