@@ -24,7 +24,7 @@ When done, stop Elasticsearch and Kibana by running:
 $ sudo docker stack rm elastic-stack
 ```
 
-To change redeploy, remove stack, wait for services to exit and redeploy using command above.
+To redeploy, remove stack, wait for services to exit and redeploy using command above.
 
 ```
 $ sudo docker stack rm elastic-stack
