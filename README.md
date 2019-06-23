@@ -11,7 +11,9 @@ Specify Elasticsearch setup password in `password.txt` file.
 Deploy Elasticsearch and Kibana to currently running swarm by running:
 
 ```
-$  export ELASTIC_PASSWORD=`cat password.txt`; sudo --preserve-env=ELASTIC_PASSWORD docker stack deploy -c docker-stack.yml elastic-stack
+$ mkdir -p data/es
+$ mkdir -p data/fb
+$ export ELASTIC_PASSWORD=`cat password.txt`; sudo --preserve-env=ELASTIC_PASSWORD docker stack deploy -c docker-stack.yml elastic-stack
 ```
 
 After startup you can connect to Elasticsearch at http://localhost:9200/ and Kibana at http://localhost:5601/

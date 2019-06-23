@@ -6,6 +6,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
     volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./data/es:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     environment:
@@ -22,8 +23,6 @@ services:
       - "5601:5601"
     networks:
       - elastic
-    depends_on:
-      - elasticsearch
     environment:
       - SERVER_NAME=kibana
       - ELASTICSEARCH_URL=http://elasticsearch:9200
@@ -31,6 +30,23 @@ services:
       - LOGGING_QUIET=true
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.1.1
+    user: root
+    networks:
+      - elastic
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./data/fb:/usr/share/filebeat/data
+      - /var/log/:/var/log/:ro
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - KIBANA_HOST=kibana:5601
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      # Without this filebeat compalains about config file permissions
+    command: ["--strict.perms=false"]
 
 networks:
   elastic:
