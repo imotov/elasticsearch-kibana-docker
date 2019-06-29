@@ -11,26 +11,25 @@ Specify Elasticsearch setup password in `password.txt` file.
 Deploy Elasticsearch and Kibana to currently running swarm by running:
 
 ```
-$ mkdir -p data/es
-$ mkdir -p data/fb
-$ export ELASTIC_PASSWORD=`cat password.txt`; sudo --preserve-env=ELASTIC_PASSWORD docker stack deploy -c docker-stack.yml elastic-stack
+$ mkdir -p data/elasticsearch data/filebeat data/metricbeat
+$ export ELASTIC_PASSWORD=`cat password.txt`; docker stack deploy -c docker-stack.yml elastic-stack
 ```
 
-After startup you can connect to Elasticsearch at http://localhost:9200/ and Kibana at http://localhost:5601/
+After startup you can connect to Elasticsearch at http://127.0.0.1:9200/ and Kibana at http://127.0.0.1:5601/
 
 Don't forget to delete the `password.txt` file.
 
 When done, stop Elasticsearch and Kibana by running:
 
 ```
-$ sudo docker stack rm elastic-stack
+$ docker stack rm elastic-stack
 ```
 
 To redeploy, remove stack, wait for services to exit and redeploy using command above.
 
 ```
-$ sudo docker stack rm elastic-stack
-$ sudo docker stack ps elastic-stack
+$ docker stack rm elastic-stack
+$ docker stack ps elastic-stack
 ```
 
 ## Troubleshooting
@@ -38,10 +37,11 @@ $ sudo docker stack ps elastic-stack
 Find the service ids by running
 
 ```
-$ sudo docker stack ps elastic-stack
+$ docker stack ps elastic-stack
 ```
 
 Check logs by running
 ```
-sudo docker service logs SERVICE_ID
+docker service ps "elastic-stack_elasticsearch"
+docker service logs SERVICE_ID
 ```

@@ -1,5 +1,4 @@
 network.host: 0.0.0.0
 discovery.type: single-node
 node.name: dockertest
-xpack.license.self_generated.type: trial
 xpack.security.enabled: true

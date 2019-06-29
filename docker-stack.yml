@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
       - ./data/es:/usr/share/elasticsearch/data
@@ -16,7 +16,7 @@ services:
       - elastic
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.1.1
+    image: docker.elastic.co/kibana/kibana:7.2.0
     volumes:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yaml:ro
     ports:
@@ -32,13 +32,13 @@ services:
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
 
   filebeat:
-    image: docker.elastic.co/beats/filebeat:7.1.1
+    image: docker.elastic.co/beats/filebeat:7.2.0
     user: root
     networks:
       - elastic
     volumes:
       - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-      - ./data/fb:/usr/share/filebeat/data
+      - ./data/filebeat:/usr/share/filebeat/data
       - /var/log/:/var/log/:ro
     environment:
       - ELASTICSEARCH_HOST=elasticsearch:9200
@@ -46,6 +46,25 @@ services:
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       # Without this filebeat compalains about config file permissions
+    command: ["--strict.perms=false"]
+
+  metricbeat:
+    image:  docker.elastic.co/beats/metricbeat:7.2.0
+    user: root
+    networks:
+      - elastic
+    volumes:
+      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+      - ./data/metricbeat:/usr/share/metricbeat/data
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch:9200
+      - KIBANA_HOST=kibana:5601
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
     command: ["--strict.perms=false"]
 
 networks:
